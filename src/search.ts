@@ -23,8 +23,8 @@ export default class SearchAPI {
     } = await axios.get<SearchAPIResponse<T, Y['fields']>>(this.url(service), {
       params: {
         q: params.q,
-        targets: params.targets.toString(),
-        fields: params.fields?.toString(),
+        targets: params.targets.join(),
+        fields: params.fields?.join(),
         jsonFilter: params.jsonFilter,
         _sort: params.sort,
         _offset: params.offset,
