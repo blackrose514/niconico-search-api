@@ -16,30 +16,32 @@ search
     q: '東方アレンジ',
     targets: ['tagsExact'],
     fields: ['title', 'viewCounter', 'contentId'],
-    _sort: '-viewCounter',
-    _limit: 20,
+    sort: '-viewCounter',
+    limit: 20,
   })
   .then((videos) => console.log(videos))
 ```
 
-<!-- # Methods
+# Methods
 
-- video (params: [SearchParams](#searchparams)) : Promise\<[ResponseData]()\>
+- video (params: [SearchParams](#searchparams))
 
-- live (params: [SearchParams](#searchparams)) : Promise\<[ResponseData]()\>
+- live (params: [SearchParams](#searchparams))
 
 ### SearchParams
 
-| params      | Type               |
-| ----------- | ------------------ |
-| q           | string             |
-| targets     | string \| string[] |
-| fields?     | string \| string[] |
-| jsonFilter? | object             |
-| \_sort      | string             |
-| \_offset?   | number             |
-| \_limit?    | number             |
-| \_context?  | string             | -->
+| params      | Type     |
+| ----------- | -------- |
+| q           | string   |
+| targets     | string[] |
+| fields?     | string[] |
+| jsonFilter? | object   |
+| sort        | string   |
+| offset?     | number   |
+| limit?      | number   |
+| context?    | string   |
+
+Return: Promise\<ResponseData\>
 
 # License
 
