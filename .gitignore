@@ -116,4 +116,5 @@ dist
 .pnp.*
 
 lib/
-p.ts
+playground/
+.vscode/
