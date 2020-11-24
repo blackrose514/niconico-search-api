@@ -1,29 +1,33 @@
-export interface SearchAPIResponse<T extends Video | Live> {
+export interface SearchAPIResponse<
+  T extends Video | Live,
+  F extends SearchParams<T>['fields']
+> {
   meta: {
     id: string
     status: number
     totalCount: number
-  },
-  data: ResponseData<T>
+  }
+  data: ResponseData<T, F>
 }
 
-export interface SearchParams<
-  T extends Video | Live
-> {
+export type ResponseData<T, F> = F extends FieldsParam<T>
+  ? Pick<T, F[number]>[]
+  : Omit<T, 'tagsExact'>[]
+
+export interface SearchParams<T extends Video | Live> {
   q: string
-  targets: TargetsParam 
-  fields?: FieldsParam<T> 
+  targets: TargetsParam
+  fields?: FieldsParam<T>
   jsonFilter?: JsonFilterParam<T>
-  _sort: SortParam<T>
-  _offset?: number
-  _limit?: number
-  _context?: string
+  sort: SortParam<T>
+  offset?: number
+  limit?: number
+  context?: string
 }
 
-export type ResponseData<T> = Partial<Omit<T, 'tagsExact'>>[]
-export type TargetsParam = ('title' | 'description' | 'tags' | 'tagsExact')[] | string
-export type FieldsParam<T> = (keyof Omit<T, 'tagsExact'>)[] | string
-export type SortParam<T> = `${'+'|'-'}${SortField<T>}`
+export type TargetsParam = ('title' | 'description' | 'tags' | 'tagsExact')[]
+export type FieldsParam<T> = (keyof Omit<T, 'tagsExact'>)[]
+export type SortParam<T> = `${'+' | '-'}${SortField<T>}`
 export type JsonFilterParam<T> =
   | EqualFilter<T>
   | RangeFilter<T>
@@ -135,6 +139,4 @@ export interface Live {
   liveStatus: 'past' | 'onair' | 'reserved'
 }
 
-export type VideoSerach = (params: SearchParams<Video>) => Promise<ResponseData<Video>>
-export type LiveSearch = (params: SearchParams<Live>) => Promise<ResponseData<Live>>
 export type Service = 'video' | 'live'

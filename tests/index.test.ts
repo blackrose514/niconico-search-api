@@ -7,7 +7,7 @@ describe('Search', () => {
       q: '東方自作アレンジ',
       targets: ['tagsExact'],
       fields: ['title', 'contentId', 'userId', 'viewCounter'],
-      _sort: '-viewCounter',
+      sort: '-viewCounter',
     })
 
     assert.exists(videos)
@@ -18,7 +18,7 @@ describe('Search', () => {
     const broadcasts = await live({
       q: '東方',
       targets: ['title', 'description', 'tags'],
-      _sort: '-startTime',
+      sort: '-startTime',
     })
 
     assert.exists(broadcasts)

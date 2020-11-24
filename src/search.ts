@@ -4,48 +4,50 @@ import {
   Live,
   SearchParams,
   Video,
-  VideoSerach,
-  LiveSearch,
-  Service,
   FieldsParam,
+  Service,
   SearchAPIResponse,
   ResponseData,
 } from './types'
 
 export default class SearchAPI {
-  private async search<T extends Video | Live>(
+  private async search<Y extends SearchParams<T>, T extends Video | Live>(
     service: Service,
-    params: SearchParams<T>
-  ): Promise<ResponseData<T>> {
-    let { targets, fields } = params
-
-    if (!fields) {
-      //@ts-ignore
-      fields = getAllFields(service)
-    }
-
-    params.targets = targets.toString()
-    params.fields = fields?.toString()
+    params: Y
+  ): Promise<ResponseData<T, Y['fields']>> {
+    //@ts-ignore
+    params.fields ??= getAllFields(service)
 
     const {
-      data: { data },
-    } = await axios.get<SearchAPIResponse<T>>(this.url(service), {
-      params,
+      data: { data: items },
+    } = await axios.get<SearchAPIResponse<T, Y['fields']>>(this.url(service), {
+      params: {
+        q: params.q,
+        targets: params.targets.toString(),
+        fields: params.fields?.toString(),
+        jsonFilter: params.jsonFilter,
+        _sort: params.sort,
+        _offset: params.offset,
+        _limit: params.limit,
+        _context: params.context,
+      },
     })
 
-    return data
+    return items
   }
 
   private url = (service: Service) =>
     `https://api.search.nicovideo.jp/api/v2/${service}/contents/search`
 
-  video: VideoSerach = (params) => this.search<Video>('video', params)
-  live: LiveSearch = (params) => this.search<Live>('live', params)
+  video = <Y extends SearchParams<Video>>(params: Y) =>
+    this.search<Y, Video>('video', params)
+  live = <Y extends SearchParams<Live>>(params: Y) =>
+    this.search<Y, Live>('live', params)
 }
 
 function getAllFields(
   service: Service
-): FieldsParam<Video> | FieldsParam<Live> {
+): FieldsParam<Video> | FieldsParam<Live> | never {
   switch (service) {
     case 'video':
       return SEARCHVIDEO_FIELDS_PARAM
