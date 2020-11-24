@@ -5,7 +5,7 @@
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register 'tests/**/*.ts'",
+    "test": "mocha --timeout 5000 -r ts-node/register 'tests/**/*.ts'",
     "format": "prettier --write src/ tests/",
     "build": "tsc -p tsconfig.json && tsc -p tsconfig-esm.json",
     "prepublishOnly": "npm run format && npm test && npm run build"
