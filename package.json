@@ -11,9 +11,14 @@
   },
   "keywords": [
     "niconico",
-    "api"
+    "api",
+    "typescript"
   ],
   "author": "blackrose514",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blackrose514/niconico-search-api.git"
+  },
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.0",
