@@ -30,16 +30,16 @@ search
 
 ### SearchParams
 
-| params      | Type     |
-| ----------- | -------- |
+| params      | Type     | Description                  |
+| ----------- | -------- | ---------------------------- |
 | q           | string   |
 | targets     | string[] |
-| fields?     | string[] |
+| fields?     | string[] | Default: Returns all fields. |
 | jsonFilter? | object   |
 | sort        | string   |
-| offset?     | number   |
-| limit?      | number   |
-| context?    | string   |
+| offset?     | number   | Default: 0 / Max: 1600       |
+| limit?      | number   | Default: 10 / Max: 100       |
+| context?    | string   | Max: 40 characters           |
 
 Return: Promise\<ResponseData\>
 
