@@ -20,6 +20,10 @@
     "type": "git",
     "url": "https://github.com/blackrose514/niconico-search-api.git"
   },
+  "bugs": {
+    "url": "https://github.com/blackrose514/niconico-search-api/issues"
+  },
+  "homepage": "https://github.com/blackrose514/niconico-search-api#readme",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.0",
