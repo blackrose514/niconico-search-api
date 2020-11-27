@@ -10,6 +10,15 @@ export interface SearchAPIResponse<
   data: ResponseData<T, F>
 }
 
+export interface ErrorResponse {
+  meta: {
+    id: string
+    status: number
+    errorCode: string
+    errorMessage: string
+  }
+}
+
 export type ResponseData<T, F> = F extends FieldsParam<T>
   ? Pick<T, F[number]>[]
   : Omit<T, 'tagsExact'>[]
