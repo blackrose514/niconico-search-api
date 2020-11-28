@@ -12,17 +12,17 @@ import {
 } from './types'
 
 export default class SearchAPI {
-  private async search<Y extends SearchParams<T>, T extends Video | Live>(
+  private async search<P extends SearchParams<T>, T extends Video | Live>(
     service: Service,
-    params: Y
-  ): Promise<ResponseData<T, Y['fields']>> | never {
+    params: P
+  ): Promise<ResponseData<T, P['fields']>> | never {
     try {
       //@ts-ignore
       params.fields ??= getAllFields(service)
 
       const {
         data: { data: items },
-      } = await axios.get<SearchAPIResponse<T, Y['fields']>>(
+      } = await axios.get<SearchAPIResponse<T, P['fields']>>(
         this.url(service),
         {
           params: {
@@ -56,10 +56,10 @@ export default class SearchAPI {
   private url = (service: Service) =>
     `https://api.search.nicovideo.jp/api/v2/${service}/contents/search`
 
-  video = <Y extends SearchParams<Video>>(params: Y) =>
-    this.search<Y, Video>('video', params)
-  live = <Y extends SearchParams<Live>>(params: Y) =>
-    this.search<Y, Live>('live', params)
+  video = <P extends SearchParams<Video>>(params: P) =>
+    this.search<P, Video>('video', params)
+  live = <P extends SearchParams<Live>>(params: P) =>
+    this.search<P, Live>('live', params)
 }
 
 function getAllFields(
