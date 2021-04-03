@@ -1,6 +1,6 @@
 {
   "name": "niconico-search-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Niconico Search API wrapper with typescript support.",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.js",
