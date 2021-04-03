@@ -8,6 +8,10 @@ npm install niconico-search-api
 
 ```js
 import search from "niconico-search-api"
+/*
+ * CommonJS
+ * const { search } = require("niconico-search-api");
+ */
 
 const { data, meta } = await search({
   q: "東方自作アレンジ",
