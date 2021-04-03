@@ -1,76 +1,48 @@
-import axios, { AxiosError } from 'axios'
-import { SEARCHVIDEO_FIELDS_PARAM, SEARCHLIVE_FIELDS_PARAM } from './const'
-import {
-  Live,
-  SearchParams,
-  Video,
-  FieldsParam,
-  Service,
-  SearchAPIResponse,
-  ErrorResponse,
-  ResponseData,
-} from './types'
+import axios from "axios"
+import { responseFields } from "./const"
+import { ErrorResponse, SearchAPIResponse, SearchParams } from "./types"
 
-export default class SearchAPI {
-  private async search<P extends SearchParams<T>, T extends Video | Live>(
-    service: Service,
-    params: P
-  ): Promise<ResponseData<T, P['fields']>> | never {
-    try {
-      //@ts-ignore
-      params.fields ??= getAllFields(service)
+const url = "https://api.search.nicovideo.jp/api/v2/snapshot/video/contents/search"
 
-      const {
-        data: { data: items },
-      } = await axios.get<SearchAPIResponse<T, P['fields']>>(
-        this.url(service),
-        {
-          params: {
-            q: params.q,
-            targets: params.targets.join(),
-            fields: params.fields?.join(),
-            jsonFilter: params.jsonFilter,
-            _sort: params.sort,
-            _offset: params.offset,
-            _limit: params.limit,
-            _context: params.context,
-          },
-        }
-      )
-
-      return items
-    } catch (error) {
-      const { response } = error as AxiosError
-      if (response) {
-        const { meta } = response.data as ErrorResponse
-        throw {
-          name: 'NiconicoSearchAPIResponseError',
-          meta,
-        }
-      } else {
-        throw error
-      }
-    }
+export default async function search<P extends SearchParams>({
+  q,
+  targets,
+  fields,
+  filters,
+  sort,
+  limit,
+  offset,
+  context,
+}: P): Promise<SearchAPIResponse<P["fields"]>> {
+  if (fields === "*") {
+    fields = responseFields
   }
 
-  private url = (service: Service) =>
-    `https://api.search.nicovideo.jp/api/v2/${service}/contents/search`
+  try {
+    const { data: res } = await axios({
+      url,
+      params: {
+        q,
+        targets: targets.join(),
+        fields: fields?.join(),
+        jsonFilter: filters,
+        _sort: sort,
+        _limit: limit,
+        _offset: offset,
+        _context: context,
+      },
+      method: "GET",
+    })
 
-  video = <P extends SearchParams<Video>>(params: P) =>
-    this.search<P, Video>('video', params)
-  live = <P extends SearchParams<Live>>(params: P) =>
-    this.search<P, Live>('live', params)
-}
-
-function getAllFields(
-  service: Service
-): FieldsParam<Video> | FieldsParam<Live> | never {
-  switch (service) {
-    case 'video':
-      return SEARCHVIDEO_FIELDS_PARAM
-    case 'live':
-      return SEARCHLIVE_FIELDS_PARAM
-    default:
-      throw 'Invalid service name.'
+    return res
+  } catch (err) {
+    if (err?.response) {
+      const { meta } = err.response as ErrorResponse
+      throw {
+        name: "NiconicoSearchAPIResponseError",
+        meta,
+      }
+    }
+    throw err
   }
 }

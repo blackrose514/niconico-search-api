@@ -1,48 +1,78 @@
-![preview-gif](images/nicosearchapi1.gif)
-
-# Installation
+## Installation
 
 ```bash
 npm install niconico-search-api
 ```
 
-# Usage
+## Usage
 
 ```js
-import search from 'niconico-search-api'
+import search from "niconico-search-api"
 
-search
-  .video({
-    q: '東方アレンジ',
-    targets: ['tagsExact'],
-    fields: ['title', 'viewCounter', 'contentId'],
-    sort: '-viewCounter',
-    limit: 20,
-  })
-  .then((videos) => console.log(videos))
+const { data, meta } = await search({
+  q: "東方自作アレンジ",
+  targets: ["tagsExact"],
+  fields: ["title", "viewCounter", "contentId"],
+  sort: "-viewCounter",
+  limit: 20,
+})
 ```
 
-# Methods
+## Methods
 
-- video (params: [SearchParams](#searchparams))
+- search (params: [SearchParams](#params)) : Promise\<[SearchAPIResponse](#response)\>
 
-- live (params: [SearchParams](#searchparams))
+#### Params
 
-### SearchParams
+| params   | Type             | Note                                                         |
+| -------- | ---------------- | ------------------------------------------------------------ |
+| q        | string           |
+| targets  | string[]         |
+| fields?  | string[] or "\*" | Fields to include in response data. <br>"\*" --> all fields. |
+| filters? | object           |
+| sort     | string           | e.g. "-viewCouner", "+lastCommentTime" etc                   |
+| offset?  | number           | Default: 0 / Max: 100000                                     |
+| limit?   | number           | Default: 10 / Max: 100                                       |
+| context? | string           | Max: 40 characters                                           |
 
-| params      | Type     | Description                  |
-| ----------- | -------- | ---------------------------- |
-| q           | string   |
-| targets     | string[] |
-| fields?     | string[] | Default: Returns all fields. |
-| jsonFilter? | object   |
-| sort        | string   |
-| offset?     | number   | Default: 0 / Max: 1600       |
-| limit?      | number   | Default: 10 / Max: 100       |
-| context?    | string   | Max: 40 characters           |
+## Response
 
-Return: Promise\<ResponseData\>
+```js
+meta: {
+  id: string
+  status: number
+  totalCount: number
+}
+data: ResponseData
+```
 
-# License
+```ts
+// ResponseData (all)
+[
+  {
+    contentId: string
+    title: string
+    description: string
+    viewCounter: number
+    mylistCounter: number
+    lengthSeconds: number
+    thumbnailUrl: string
+    startTime: string
+    lastResBody: string
+    commentCounter: number
+    lastCommentTime: string
+    categoryTags: string
+    tags: string
+    genre: string
+  },
+  //...
+]
+```
+
+## API Docs
+
+https://site.nicovideo.jp/search-api-docs/snapshot
+
+## License
 
 [MIT](LICENSE)
